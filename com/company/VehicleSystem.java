@@ -115,15 +115,23 @@ public class VehicleSystem implements TickerObserver {
 	}
 	
 	private void notifyCrew(String parkingId) {
+
+		humanResourceController.notifySupportCrew(parkingId, "vehicle was returned");
 	
 	}
 	
 	private void notifySecurity(Location location) {
-	
+
+		humanResourceController.notifySecurityCrew(location, "vehicle is overdue");
 	}
 
 	@Override
 	public void tickMade(Date date) {
+
+	}
+
+	public void activateLock(Sring lockId){
+
 
 	}
 }
