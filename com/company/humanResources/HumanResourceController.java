@@ -8,6 +8,7 @@ package com.company.humanResources;//
 //
 
 
+import com.company.gps.Location;
 import com.company.humanResources.crew.Crew;
 import com.company.humanResources.user.User;
 import com.company.humanResources.user.UserCatalog;
@@ -48,10 +49,13 @@ public class HumanResourceController {
 	}
 	
 	public void notifySupportCrew(String parkingId, String message) {
-	
+
+		crew.notifySupportCrew(parkingId, message);
 	}
 	
-	public void notifySecurityCrew(String location, String message) {
+	public void notifySecurityCrew(Location location, String message) {
+
+		crew.notifySecurityCrew(location, message);
 	
 	}
 }
