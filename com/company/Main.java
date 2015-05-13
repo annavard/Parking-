@@ -90,8 +90,8 @@ public class Main {
     }
 
     private boolean bookVehicle(String userId, String vehicleId, String parkingId) {
-        Calendar bookStart = new Calendar();
-        Calendar bookEnd = new Calendar();
+        Calendar bookStart = Calendar.getInstance();
+        Calendar bookEnd = Calendar.getInstance();
 
         bookStart.add(Calendar.SECOND, 5);
         bookEnd.add(Calendar.SECOND, 50);
