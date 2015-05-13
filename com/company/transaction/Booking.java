@@ -18,10 +18,10 @@ public class Booking extends Transaction {
 
 	private String state;
 
-	public Booking(String userId, String vehicleId, String parkingId, Date bookStart, Date bookEnd, String state) {
+	public Booking(String userId, String vehicleId, String parkingId, Date bookStart, Date bookEnd) {
 		super(userId, vehicleId, parkingId, bookStart, bookEnd);
 
-		this.state = state;
+		this.state = STATE_BOOKED;
 	}
 
 	public String getState() {

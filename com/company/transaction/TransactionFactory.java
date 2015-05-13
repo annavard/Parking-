@@ -8,11 +8,25 @@ package com.company.transaction;//
 //
 
 
-
+import java.util.Date;
 
 public class TransactionFactory {
-	public void process(Object userId, Object vehicleId, Object parkingId, Object bookEnd, Object bookStart) {
-	
+	private static TransactionFactory sharedFactory;
+
+	private TransactionFactory() {
+
+	}
+
+	public static TransactionFactory sharedFactory() {
+		if (sharedFactory == null) {
+			sharedFactory = new TransactionFactory();
+		}
+
+		return sharedFactory;
+	}
+
+	public Transaction process(String userId, String vehicleId, String parkingId, Date bookStart, Date bookEnd) {
+		return new Booking(userId, vehicleId, parkingId, bookStart, bookEnd);
 	}
 	
 	public void process(Object transaction) {

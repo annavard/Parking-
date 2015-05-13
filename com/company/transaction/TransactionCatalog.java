@@ -31,12 +31,18 @@ public class TransactionCatalog {
 		return null;
 	}
 	
-	public void findTransactions(TransactionChoiseStrategy strategy) {
-	
+	public Transaction findTransactions(TransactionChoiseStrategy strategy) {
+		for (Transaction transaction : transactions) {
+			if (strategy.matches(transaction)) {
+				return transaction;
+			}
+		}
+
+		return null;
 	}
 	
-	public void addBooking(String userId, String vehicleId, String parkingId, Date bookEnd, Date bookStart) {
-		Booking booking = new Booking(userId, vehicleId, parkingId, bookStart, bookEnd, Booking.STATE_BOOKED);
+	public void addBooking(String userId, String vehicleId, String parkingId, Date bookStart, Date bookEnd) {
+		Transaction booking = TransactionFactory.sharedFactory().process(userId, vehicleId, parkingId, bookStart, bookEnd);
 		transactions.add(booking);
 	}
 	

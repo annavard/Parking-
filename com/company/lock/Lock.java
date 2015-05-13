@@ -8,17 +8,19 @@ package com.company.lock;//
 //
 
 
-
+import com.company.IdGenerator;
 
 public class Lock {
+	private static final IdGenerator idGenetator = new IdGenerator("LOCK");
+
 	private String lockId;
 	private String targetId;
 	private String targetType;
 
-	public Lock(String lockId, String targetId, String targetType) {
-		this.lockId = lockId;
+	public Lock(String targetId, String targetType) {
 		this.targetId = targetId;
 		this.targetType = targetType;
+		this.lockId = idGenetator.generateId();
 	}
 
 	public void unlock() {

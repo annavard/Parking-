@@ -8,6 +8,7 @@ package com.company.transactionStrategy;//
 //
 
 
+import com.company.transaction.Booking;
 import com.company.transaction.Transaction;
 
 public class OwnerChoiseStrategy implements TransactionChoiseStrategy {
@@ -19,6 +20,11 @@ public class OwnerChoiseStrategy implements TransactionChoiseStrategy {
 
 	@Override
 	public boolean matches(Transaction transaction) {
-		return transaction.getUserId().equals(userId);
+		if (transaction instanceof Booking) {
+			Booking booking = (Booking) transaction;
+			return booking.getUserId().equals(userId);
+		}
+
+		return false;
 	}
 }

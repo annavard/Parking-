@@ -9,21 +9,48 @@ package com.company.transaction;//
 
 
 import com.company.transaction.TransactionCatalog;
+import com.company.transactionStrategy.ExistChoiseStrategy;
+import com.company.transactionStrategy.IntersectChoiseSubStrategy;
+import com.company.transactionStrategy.OwnerChoiseStrategy;
+import com.company.transactionStrategy.UserViolationChoiseSubStrategy;
+
+import java.util.Date;
 
 public class TransactionController {
 	private TransactionCatalog transactionCatalog;
 	private TokenCatalog tokenCatalog;
 
-	public void addBooking(Object userId, Object vehicleId, Object parkingId, Object bookEnd, Object bookStart) {
-	
+	public Token[] addBooking(String userId, String vehicleId, String parkingId, Date bookStart, Date bookEnd) {
+		ExistChoiseStrategy existChoiseStrategy = new ExistChoiseStrategy();
+		UserViolationChoiseSubStrategy violationChoiseSubStrategy = new UserViolationChoiseSubStrategy(userId, vehicleId);
+		IntersectChoiseSubStrategy intersectChoiseSubStrategy = new IntersectChoiseSubStrategy(vehicleId, bookStart, bookEnd);
+
+		existChoiseStrategy.add(violationChoiseSubStrategy);
+		existChoiseStrategy.add(intersectChoiseSubStrategy);
+
+		Transaction existingTransaction = transactionCatalog.findTransaction(existChoiseStrategy);
+
+		if (existingTransaction != null) {
+			return null;
+		}
+
+		transactionCatalog.addBooking(userId, vehicleId, parkingId, bookStart, bookEnd);
+
+		Token[] tokens = new Token[2];
+		tokens[0] = tokenCatalog.addToken(userId, parkingId, Token.TARGET_TYPE_MAIN_GATE);
+		tokens[1] = tokenCatalog.addToken(userId, parkingId, Token.TARGET_TYPE_VEHICLE);
+
+		return tokens;
 	}
 	
-	public void findTransaction(Object userId) {
-	
+	public Transaction findTransaction(String userId) {
+		OwnerChoiseStrategy ownerChoiseStrategy = new OwnerChoiseStrategy(userId);
+
+		return transactionCatalog.findTransaction(ownerChoiseStrategy);
 	}
 	
-	public void findAndRemoveToken(Object tokenId, Object userId, Object targetId, Object targetType) {
-	
+	public boolean findAndRemoveToken(String tokenId, String userId, String targetId, String targetType) {
+		return tokenCatalog.findAndRemove(tokenId, userId, targetId, targetType);
 	}
 	
 	public void completeTransaction(Object vehicleId) {

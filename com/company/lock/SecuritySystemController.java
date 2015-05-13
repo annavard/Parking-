@@ -9,6 +9,7 @@ package com.company.lock;//
 
 
 import com.company.gps.Location;
+import com.company.transaction.Token;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,6 +19,22 @@ public class SecuritySystemController {
 
 	public SecuritySystemController() {
 		locks = new ArrayList<>();
+
+		Lock firstVehicleLock = new Lock("VEHICLE_1", Token.TARGET_TYPE_VEHICLE);
+		Lock secondVehicleLock = new Lock("VEHICLE_2", Token.TARGET_TYPE_VEHICLE);
+		Lock thirthVehicleLock = new Lock("VEHICLE_3", Token.TARGET_TYPE_VEHICLE);
+		Lock firstMainGate = new Lock("PARKING_1", Token.TARGET_TYPE_MAIN_GATE);
+		Lock secondMainGate = new Lock("PARKING_2", Token.TARGET_TYPE_MAIN_GATE);
+		Lock firstSecondGate = new Lock("PARKING_1", Token.TARGET_TYPE_SECOND_GATE);
+		Lock secondSecondGate = new Lock("PARKING_2", Token.TARGET_TYPE_SECOND_GATE);
+
+		locks.add(firstVehicleLock);
+		locks.add(secondVehicleLock);
+		locks.add(thirthVehicleLock);
+		locks.add(firstMainGate);
+		locks.add(secondMainGate);
+		locks.add(firstSecondGate);
+		locks.add(secondSecondGate);
 	}
 
 	public void findAndUnlock(String lockId, String targetId, String targetType) {
@@ -46,9 +63,5 @@ public class SecuritySystemController {
 		}
 
 		return null;
-	}
-
-	public void addLock(Lock lock) {
-		locks.add(lock);
 	}
 }

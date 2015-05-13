@@ -9,16 +9,14 @@
 
 package com.company;
 
-import com.company.TickerObserver;
 import com.company.gps.GPSTrackerController;
 import com.company.gps.Location;
 import com.company.humanResources.HumanResourceController;
-import com.company.humanResources.user.User;
 import com.company.lock.SecuritySystemController;
 import com.company.property.PropertyController;
 import com.company.property.parking.Parking;
 import com.company.property.vehicle.Vehicle;
-import com.company.transaction.TransactionController;
+import com.company.transaction.*;
 
 import java.util.Date;
 import java.util.List;
@@ -76,22 +74,44 @@ public class VehicleSystem implements TickerObserver {
 		if (!vehicleExists) {
 			return false;
 		}
+
+		Token[] tokens = transactionController.addBooking(userId, vehicleId, parkingId, bookStart, bookEnd);
+
+		return true;
 	}
 	
-	public void unlockMainGate(String tokenId, String email, String password, String lockId) {
-	
+	public boolean unlockMainGate(String tokenId, String email, String password, String lockId) {
+		return unlockTarget(tokenId, email, password, lockId, Token.TARGET_TYPE_MAIN_GATE, new ParkingTargetStrategy());
 	}
 	
-	public void unlockSecondGate(String tokenId, String email, String password, String lockId) {
-	
+	public boolean unlockSecondGate(String tokenId, String email, String password, String lockId) {
+		return unlockTarget(tokenId, email, password, lockId, Token.TARGET_TYPE_SECOND_GATE, new ParkingTargetStrategy());
 	}
 	
-	public void unlockVehicle(String tokenId, String email, String password, String lockId) {
-	
+	public boolean unlockVehicle(String tokenId, String email, String password, String lockId) {
+		return unlockTarget(tokenId, email, password, lockId, Token.TARGET_TYPE_VEHICLE, new VehicleTargetStrategy());
 	}
 	
-	private void unlockTarget(String tokenId, String email, String password, String lockId, String targetType) {
-	
+	private boolean unlockTarget(String tokenId, String email, String password, String lockId, String targetType, TargetStrategy targetStrategy) {
+		String userId = humanResourceController.findUserId(email, password);
+
+		Transaction transaction = transactionController.findTransaction(userId);
+
+		if (transaction == null) {
+			return false;
+		}
+
+		String targetId = targetStrategy.retrieveTarget(transaction);
+
+		boolean tokenExists = transactionController.findAndRemoveToken(tokenId, userId, targetId, targetType);
+
+		if (!tokenExists) {
+			return false;
+		}
+
+		securitySystemController.findAndUnlock(lockId, targetId, targetType);
+
+		return true;
 	}
 	
 	private void notifyCrew(String parkingId) {
