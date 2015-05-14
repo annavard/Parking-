@@ -11,6 +11,14 @@ package com.company.transaction;//
 import java.util.Date;
 
 public class TransactionFactory {
+	public static final String STATE_TAKEN = "stateTaken";
+	public static final String STATE_RETURNED = "stateReturned";
+	public static final String STATE_CASE = "stateCase";
+	public static final String STATE_BOOKED = "stateBooked";
+
+	public static final String STATUS_GOOD = "statusGood";
+	public static final String STATUS_BAD = "statusBad";
+
 	private static TransactionFactory sharedFactory;
 
 	private TransactionFactory() {
@@ -26,18 +34,44 @@ public class TransactionFactory {
 	}
 
 	public Transaction process(String userId, String vehicleId, String parkingId, Date bookStart, Date bookEnd) {
-		return new Booking(userId, vehicleId, parkingId, bookStart, bookEnd);
+		return new Booking(userId, vehicleId, parkingId, STATE_BOOKED, bookStart, bookEnd);
 	}
 	
-	public void process(Object transaction) {
-	
+	public Transaction process(Transaction transaction, String notes) {
+		if (transaction instanceof Booking) {
+			Booking booking = (Booking) transaction;
+
+			if (booking.getState().equals(STATE_BOOKED)) {
+				booking.setState(STATE_TAKEN);
+
+				System.out.println("TRANSACTION PROCESSED " + STATE_BOOKED + " > " + STATE_TAKEN);
+
+				return transaction;
+			}
+			if (booking.getState().equals(STATE_TAKEN)) {
+				booking.setState(STATE_RETURNED);
+
+				System.out.println("TRANSACTION PROCESSED " + STATE_BOOKED + " > " + STATE_RETURNED);
+				System.out.println("TRANSACTION PROCESSED " + STATUS_GOOD + " NOTES \"" + notes + "\"");
+
+				return new Processed(transaction.getUserId(), transaction.getVehicleId(), transaction.getParkingId(), transaction.getBookStart(), transaction.getBookEnd(), STATUS_GOOD, null);
+			}
+			if (booking.getState().equals(STATE_CASE)) {
+				System.out.println("TRANSACTION PROCESSED " + STATE_CASE + " > " + STATUS_BAD);
+				System.out.println("TRANSACTION PROCESSED " + STATUS_BAD + " NOTES \"" + notes + " \"");
+
+				return new Processed(transaction.getUserId(), transaction.getVehicleId(), transaction.getParkingId(), transaction.getBookStart(), transaction.getBookEnd(), STATUS_BAD, notes);
+			}
+		}
+
+		return transaction;
 	}
-	
-	public void processViolator(Object transaction) {
-	
-	}
-	
-	public void processViolator(Object transaction, Object comment) {
-	
+
+	public void processViolator(Transaction transaction) {
+		if (transaction instanceof Booking) {
+			Booking booking = (Booking) transaction;
+
+			booking.setState(STATE_CASE);
+		}
 	}
 }

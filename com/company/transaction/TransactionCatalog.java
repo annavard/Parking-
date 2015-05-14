@@ -30,23 +30,23 @@ public class TransactionCatalog {
 
 		return null;
 	}
-	
-	public Transaction findTransactions(TransactionChoiseStrategy strategy) {
-		for (Transaction transaction : transactions) {
-			if (strategy.matches(transaction)) {
-				return transaction;
-			}
-		}
 
-		return null;
-	}
-	
 	public void addBooking(String userId, String vehicleId, String parkingId, Date bookStart, Date bookEnd) {
 		Transaction booking = TransactionFactory.sharedFactory().process(userId, vehicleId, parkingId, bookStart, bookEnd);
 		transactions.add(booking);
 	}
 	
-	public void processTransaction(Transaction transaction) {
-	
+	public void processTransaction(Transaction transaction, String notes) {
+		Transaction processedTransaction = TransactionFactory.sharedFactory().process(transaction, notes);
+
+		transactions.remove(transaction);
+
+		if (processedTransaction != null) {
+			transactions.add(processedTransaction);
+		}
+	}
+
+	public void processViolation(Transaction transaction) {
+		TransactionFactory.sharedFactory().processViolator(transaction);
 	}
 }

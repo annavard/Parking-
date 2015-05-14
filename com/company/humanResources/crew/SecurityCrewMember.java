@@ -10,18 +10,18 @@ package com.company.humanResources.crew;//
 
 import com.company.gps.Location;
 
-public class AlarmCrewMember extends CrewMember {
+public class SecurityCrewMember extends CrewMember {
 	private Location[] authoritySegment = new Location[4];
 
-	public AlarmCrewMember(String memberName, String memberPhone, String memberEmail, String memberId, Location[] authoritySegment) {
-		super(memberName, memberPhone, memberEmail, memberId);
+	public SecurityCrewMember(String memberName, String memberPhone, String memberEmail, Location[] authoritySegment) {
+		super(memberName, memberPhone, memberEmail);
 
 		this.authoritySegment = authoritySegment;
 	}
 
 	@Override
 	public void notify(String message) {
-		System.out.print("SECURITY NOTIFIED " + message);
+		System.out.println("SECURITY NOTIFIED " + message);
 	}
 	
 	public boolean isInSegment(Location location) {

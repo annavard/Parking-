@@ -37,13 +37,15 @@ public class SecuritySystemController {
 		locks.add(secondSecondGate);
 	}
 
-	public void findAndUnlock(String lockId, String targetId, String targetType) {
+	public boolean findAndUnlock(String lockId, String targetId, String targetType) {
 		for (Lock lock : locks) {
 			if (lock.matches(lockId, targetId, targetType)) {
 				lock.unlock();
-				return;
+				return true;
 			}
 		}
+
+		return false;
 	}
 	
 	public void findAndLock(String lockId) {

@@ -8,7 +8,7 @@ package com.company.property.vehicle;//
 //
 
 
-import com.company.IdGenerator;
+import com.company.utility.IdGenerator;
 
 public class Vehicle {
 	private static final IdGenerator idGenerator = new IdGenerator("VEHICLE");
@@ -42,10 +42,6 @@ public class Vehicle {
 
 	public String getVehicleId() {
 		return vehicleId;
-	}
-
-	public String getGpsTrackerId() {
-		return gpsTrackerId;
 	}
 
 	@Override

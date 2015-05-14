@@ -8,7 +8,7 @@ package com.company.transaction;//
 //
 
 
-import com.company.IdGenerator;
+import com.company.utility.IdGenerator;
 
 public class Token {
 	public static final String TARGET_TYPE_VEHICLE = "targetTypeVehicle";
@@ -36,11 +36,11 @@ public class Token {
 				&& this.targetType.equals(targetType);
 	}
 
-	public String getTargetId() {
-		return targetId;
-	}
-
-	public String getTokenId() {
-		return tokenId;
+	@Override
+	public String toString() {
+		return "TOKEN ID : " + tokenId + "\n"
+				+ "USER ID : " + userId + "\n"
+				+ "TARGET ID : " + targetId + "\n"
+				+ "TARGET TYPE : " + targetType + "\n";
 	}
 }

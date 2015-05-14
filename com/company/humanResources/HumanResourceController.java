@@ -47,15 +47,18 @@ public class HumanResourceController {
 
 		return user.getUserId();
 	}
-	
-	public void notifySupportCrew(String parkingId, String message) {
 
-		crew.notifySupportCrew(parkingId, message);
+	public String findUserEmail(String userId) {
+		User user = userCatalog.findUser(userId);
+
+		return user.getEmail();
 	}
 	
-	public void notifySecurityCrew(Location location, String message) {
-
-		crew.notifySecurityCrew(location, message);
+	public void notifySupportCrew(String parkingId, String vehicleId, String lockId) {
+		crew.notifySupportCrew(parkingId, "Move " + vehicleId + " to " + lockId);
+	}
 	
+	public void notifySecurityCrew(Location location, String vehicleId, String parkingId) {
+		crew.notifySecurityCrew(location, "At location " + location + " vehicle " + vehicleId + " deliver to " + parkingId);
 	}
 }

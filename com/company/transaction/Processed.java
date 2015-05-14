@@ -11,9 +11,6 @@ package com.company.transaction;//
 import java.util.Date;
 
 public class Processed extends Transaction {
-	public static final String STATUS_GOOD = "statusGood";
-	public static final String STATUS_BAD = "statusBad";
-
 	private String systemFeedbackStatus;
 	private String systemFeedbackNotes;
 
@@ -26,9 +23,5 @@ public class Processed extends Transaction {
 
 	public String getSystemFeedbackStatus() {
 		return systemFeedbackStatus;
-	}
-
-	public String getSystemFeedbackNotes() {
-		return systemFeedbackNotes;
 	}
 }

@@ -25,14 +25,25 @@ public class TokenCatalog {
 		return token;
 	}
 	
-	public boolean findAndRemove(String tokenId, String userId, String targetId, String targetType) {
+	public boolean doTokenExists(String tokenId, String userId, String targetId, String targetType) {
+		Token token = findToken(tokenId, userId, targetId, targetType);
+
+		return token != null;
+	}
+
+	public void remove(String tokenId, String userId, String targetId, String targetType) {
+		Token token = findToken(tokenId, userId, targetId, targetType);
+
+		tokens.remove(token);
+	}
+
+	private Token findToken(String tokenId, String userId, String targetId, String targetType) {
 		for (Token token : tokens) {
 			if (token.match(tokenId, userId, targetId, targetType)) {
-				tokens.remove(token);
-				return true;
+				return token;
 			}
 		}
 
-		return false;
+		return null;
 	}
 }

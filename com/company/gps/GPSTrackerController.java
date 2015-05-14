@@ -8,11 +8,26 @@ package com.company.gps;//
 //
 
 
-
+import java.util.ArrayList;
+import java.util.List;
 
 public class GPSTrackerController {
-	private GPSDevice devices;
-	public void getLocation(Object vehicleId) {
-	
+	private List<GPSDevice> devices;
+
+	public GPSTrackerController() {
+		this.devices = new ArrayList<>();
+
+		GPSDevice device = new GPSDevice("VEHICLE_2", new Location(0.5f, 0.5f));
+		devices.add(device);
+	}
+
+	public Location getLocation(String vehicleId) {
+		for (GPSDevice device : devices) {
+			if (device.getVehicleId().equals(vehicleId)) {
+				return device.getLocation();
+			}
+		}
+
+		return null;
 	}
 }

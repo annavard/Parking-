@@ -8,7 +8,7 @@ package com.company.humanResources.user;//
 //
 
 
-import com.company.IdGenerator;
+import com.company.utility.IdGenerator;
 
 public class User {
 	private static IdGenerator idGenerator = new IdGenerator("USER");
@@ -54,5 +54,9 @@ public class User {
 	
 	public boolean getIsLoggedIn() {
 		return isLoggedIn;
+	}
+
+	public String getEmail() {
+		return email;
 	}
 }

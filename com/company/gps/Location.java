@@ -33,4 +33,9 @@ public class Location {
     public float getLongitude() {
         return longitude;
     }
+
+    @Override
+    public String toString() {
+        return latitude + ":" + longitude;
+    }
 }

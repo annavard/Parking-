@@ -16,39 +16,47 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Crew {
-	private List<AlarmCrewMember> securityCrew;
+	private List<SecurityCrewMember> securityCrew;
 	private List<SupportCrewMember> supportCrew;
 
 	public Crew() {
-		this.securityCrew = new ArrayList<AlarmCrewMember>();
-		this.supportCrew = new ArrayList<SupportCrewMember>();
+		this.securityCrew = new ArrayList<>();
+		this.supportCrew = new ArrayList<>();
+
+		SupportCrewMember supportMember = new SupportCrewMember("Marsel", "333990099", "marsel@yahoo.com", "PARKING_1");
+		addSupportMember(supportMember);
+
+		SecurityCrewMember alarmCrewMember = new SecurityCrewMember("Bond, James Bond", "007", "james@bond.m7", new Location[] {
+				new Location(0.0f, 0.0f),
+				new Location(0.0f, 1.0f),
+				new Location(1.0f, 1.0f),
+				new Location(1.0f, 0.0f)
+		});
+		addSecurityMember(alarmCrewMember);
 	}
 
 	public void addSupportMember(SupportCrewMember supportCrewMember) {
 		supportCrew.add(supportCrewMember);
 	}
 
-	public void addSecurityMember(AlarmCrewMember alarmCrewMember) {
+	public void addSecurityMember(SecurityCrewMember alarmCrewMember) {
 		securityCrew.add(alarmCrewMember);
 	}
 
 	public void notifySupportCrew(String parkingId, String message) {
-		for(SupportCrewMember support: supportCrew) {
-
-			if (support.getParkingId() == parkingId)
+		for(SupportCrewMember support : supportCrew) {
+			if (support.getParkingId().equals(parkingId)) {
 				support.notify(message);
+			}
 		}
 	}
 	
 	public void notifySecurityCrew(Location location, String message) {
-
-		for(AlarmCrewMember crewMember: securityCrew){
-
-			if(crewMember.isInSegment(location))
+		for(SecurityCrewMember crewMember : securityCrew) {
+			if (crewMember.isInSegment(location)) {
 				crewMember.notify(message);
-
-		}
-
+			}
 		}
 	}
+}
 

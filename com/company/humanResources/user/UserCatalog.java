@@ -40,6 +40,16 @@ public class UserCatalog {
 
 		return null;
 	}
+
+	public User findUser(String userId) {
+		for (User user : users) {
+			if (user.getUserId().equals(userId)) {
+				return user;
+			}
+		}
+
+		return null;
+	}
 	
 	public boolean isUserLoggedIn(String userId) {
 		for (User user : users) {

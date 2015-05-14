@@ -8,7 +8,7 @@ package com.company.property.parking;//
 //
 
 
-import com.company.IdGenerator;
+import com.company.utility.IdGenerator;
 
 public class Parking {
 	private static IdGenerator idGenerator = new IdGenerator("PARKING");

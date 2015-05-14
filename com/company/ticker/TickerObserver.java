@@ -7,7 +7,7 @@
 //
 //
 
-package com.company;
+package com.company.ticker;
 
 import java.util.Date;
 

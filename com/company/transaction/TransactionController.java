@@ -8,17 +8,18 @@ package com.company.transaction;//
 //
 
 
-import com.company.transaction.TransactionCatalog;
-import com.company.transactionStrategy.ExistChoiseStrategy;
-import com.company.transactionStrategy.IntersectChoiseSubStrategy;
-import com.company.transactionStrategy.OwnerChoiseStrategy;
-import com.company.transactionStrategy.UserViolationChoiseSubStrategy;
+import com.company.transactionStrategy.*;
 
 import java.util.Date;
 
 public class TransactionController {
 	private TransactionCatalog transactionCatalog;
 	private TokenCatalog tokenCatalog;
+
+	public TransactionController() {
+		transactionCatalog = new TransactionCatalog();
+		tokenCatalog = new TokenCatalog();
+	}
 
 	public Token[] addBooking(String userId, String vehicleId, String parkingId, Date bookStart, Date bookEnd) {
 		ExistChoiseStrategy existChoiseStrategy = new ExistChoiseStrategy();
@@ -38,7 +39,7 @@ public class TransactionController {
 
 		Token[] tokens = new Token[2];
 		tokens[0] = tokenCatalog.addToken(userId, parkingId, Token.TARGET_TYPE_MAIN_GATE);
-		tokens[1] = tokenCatalog.addToken(userId, parkingId, Token.TARGET_TYPE_VEHICLE);
+		tokens[1] = tokenCatalog.addToken(userId, vehicleId, Token.TARGET_TYPE_VEHICLE);
 
 		return tokens;
 	}
@@ -48,16 +49,49 @@ public class TransactionController {
 
 		return transactionCatalog.findTransaction(ownerChoiseStrategy);
 	}
-	
-	public boolean findAndRemoveToken(String tokenId, String userId, String targetId, String targetType) {
-		return tokenCatalog.findAndRemove(tokenId, userId, targetId, targetType);
+
+	public Transaction findActiveTransaction(String vehicleId) {
+		VehicleStrategy vehicleStrategy = new VehicleStrategy(vehicleId);
+
+		return transactionCatalog.findTransaction(vehicleStrategy);
+	}
+
+
+	public boolean doTokenExists(String tokenId, String userId, String targetId, String targetType) {
+		return tokenCatalog.doTokenExists(tokenId, userId, targetId, targetType);
+	}
+
+	public void removeToken(String tokenId, String userId, String targetId, String targetType) {
+		tokenCatalog.remove(tokenId, userId, targetId, targetType);
 	}
 	
-	public void completeTransaction(Object vehicleId) {
-	
+	public Transaction findAndProcessViolator(Date date) {
+		DateViolationChoiseStrategy dateViolationChoiseStrategy = new DateViolationChoiseStrategy(date);
+
+		Transaction transaction = transactionCatalog.findTransaction(dateViolationChoiseStrategy);
+
+		if (transaction == null) {
+			return null;
+		}
+
+		transactionCatalog.processViolation(transaction);
+
+		return transaction;
 	}
-	
-	public void findAndReportViolators(Object date) {
-	
+
+	public void processTransaction(Transaction transaction, String notes) {
+		transactionCatalog.processTransaction(transaction, notes);
+	}
+
+	public Token makeToken(Transaction transaction, String targetType) {
+		String targetId = null;
+
+		if (targetType.equals(Token.TARGET_TYPE_MAIN_GATE) || targetType.equals(Token.TARGET_TYPE_SECOND_GATE)) {
+			targetId = transaction.getParkingId();
+		} else if (targetType.equals(Token.TARGET_TYPE_VEHICLE)) {
+			targetId = transaction.getVehicleId();
+		}
+
+		return tokenCatalog.addToken(transaction.getUserId(), targetId, targetType);
 	}
 }

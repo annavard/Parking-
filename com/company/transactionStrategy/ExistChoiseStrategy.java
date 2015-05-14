@@ -10,17 +10,22 @@ package com.company.transactionStrategy;//
 
 import com.company.transaction.Transaction;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ExistChoiseStrategy implements TransactionChoiseStrategy {
 	private List<TransactionChoiseSubStrategy> substrategies;
 
+	public ExistChoiseStrategy() {
+		substrategies = new ArrayList<>();
+	}
+
 	@Override
 	public boolean matches(Transaction transaction) {
-		boolean matches = true;
+		boolean matches = false;
 
 		for (TransactionChoiseSubStrategy subStrategy : substrategies) {
-			matches = matches && subStrategy.matches(transaction);
+			matches = matches || subStrategy.matches(transaction);
 		}
 
 		return matches;

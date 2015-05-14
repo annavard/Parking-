@@ -8,7 +8,9 @@ package com.company.transactionStrategy;//
 //
 
 
+import com.company.transaction.Booking;
 import com.company.transaction.Transaction;
+import com.company.transaction.TransactionFactory;
 
 public class VehicleStrategy implements TransactionChoiseStrategy {
 	private String vehicleId;
@@ -19,6 +21,11 @@ public class VehicleStrategy implements TransactionChoiseStrategy {
 
 	@Override
 	public boolean matches(Transaction transaction) {
-		return true;
+		if (transaction instanceof Booking) {
+			Booking booking = (Booking) transaction;
+			return booking.getVehicleId().equals(vehicleId) && (booking.getState().equals(TransactionFactory.STATE_TAKEN) || booking.getState().equals(TransactionFactory.STATE_CASE));
+		}
+
+		return false;
 	}
 }

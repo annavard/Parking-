@@ -2,12 +2,15 @@ package com.company;
 
 import com.company.property.parking.Parking;
 import com.company.property.vehicle.Vehicle;
+import com.company.system.VehicleSystem;
+import com.company.ticker.DailyTicker;
+import com.company.ticker.TickerObserver;
 
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-public class Main {
+public class Main implements TickerObserver {
     VehicleSystem system;
 
     public static void main(String[] args) {
@@ -18,10 +21,20 @@ public class Main {
     private void test() {
         system = VehicleSystem.sharedSystem();
 
+        DailyTicker.sharedTicker().attach(this);
+
         registerUser();
         String userId = loginUser();
         String parkingId = viewParkings();
         String vehicleId = viewVehicles(parkingId);
+        bookVehicle(userId, vehicleId, parkingId, false);
+        unlockMainGate("TOKEN_1");
+        unlockVehicle("TOKEN_2");
+        unlockSecondGate("TOKEN_3");
+        lockVehicle();
+        bookVehicle(userId, vehicleId, parkingId, true);
+        unlockMainGate("TOKEN_4");
+        unlockVehicle("TOKEN_5");
     }
 
     private void registerUser() {
@@ -89,17 +102,75 @@ public class Main {
         return vehicles.get(0).getVehicleId();
     }
 
-    private boolean bookVehicle(String userId, String vehicleId, String parkingId) {
+    private void bookVehicle(String userId, String vehicleId, String parkingId, boolean asViolator) {
         Calendar bookStart = Calendar.getInstance();
         Calendar bookEnd = Calendar.getInstance();
 
         bookStart.add(Calendar.SECOND, 5);
-        bookEnd.add(Calendar.SECOND, 50);
+        bookEnd.add(Calendar.SECOND, asViolator ? 5 : 50);
 
         System.out.println();
         System.out.println("Book vehicle " + vehicleId + " as " + userId + " from " + bookStart + " to " + bookEnd);
         System.out.println();
 
-        return system.bookVehicle(userId, parkingId, vehicleId, bookStart.getTime(), bookEnd.getTime());
+        boolean bookSuccess = system.bookVehicle(userId, parkingId, vehicleId, bookStart.getTime(), bookEnd.getTime());
+        String message = bookSuccess ? "Booked successfully" : "Book failed";
+
+        System.out.println(message);
+
+        return;
+    }
+
+    private void unlockMainGate(String tokenId) {
+        System.out.println();
+        System.out.println("Unlock Main Gate");
+        System.out.println();
+
+        boolean unlockSuccess = system.unlockMainGate(tokenId, "nicksargsyan@yahoo.com", "qwerty", "LOCK_4");
+        String message = unlockSuccess ? "Main Gate unlocked successfully" : "Failed to unlock Main Gate";
+        System.out.println(message);
+
+        return;
+    }
+
+    private void unlockVehicle(String tokenId) {
+        System.out.println();
+        System.out.println("Unlock Vehicle");
+        System.out.println();
+
+        boolean unlockSuccess = system.unlockVehicle(tokenId, "nicksargsyan@yahoo.com", "qwerty", "LOCK_2");
+        String message = unlockSuccess ? "Vehicle unlocked successfully" : "Failed to unlock Vehicle";
+        System.out.println(message);
+
+        return;
+    }
+
+    private void unlockSecondGate(String tokenId) {
+        System.out.println();
+        System.out.println("Unlock Second Gate");
+        System.out.println();
+
+        boolean unlockSuccess = system.unlockSecondGate(tokenId, "nicksargsyan@yahoo.com", "qwerty", "LOCK_6");
+        String message = unlockSuccess ? "Second Gate unlocked successfully" : "Failed to unlock Second Gate";
+        System.out.println(message);
+
+        return;
+    }
+
+    private void lockVehicle() {
+        System.out.println();
+        System.out.println("Lock vehicle");
+        System.out.println();
+
+        system.activateLock("LOCK_2", "No notes");
+    }
+
+    @Override
+    public  void tickMade(Date date) {
+        System.out.println();
+        System.out.println("Search for violators and report");
+        System.out.println();
+
+        system.solveCase("VEHICLE_2", "Played Grand Theft Auto too much");
     }
 }

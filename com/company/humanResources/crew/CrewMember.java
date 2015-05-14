@@ -8,19 +8,21 @@ package com.company.humanResources.crew;//
 //
 
 
-
+import com.company.utility.IdGenerator;
 
 public abstract class CrewMember {
+	private static final IdGenerator idGenerator = new IdGenerator("CREW");
+
 	private String memberName;
 	private String memberPhone;
 	private String memberEmail;
 	private String memberId;
 
-	public CrewMember(String memberName, String memberPhone, String memberEmail, String memberId) {
+	public CrewMember(String memberName, String memberPhone, String memberEmail) {
 		this.memberName = memberName;
 		this.memberPhone = memberPhone;
 		this.memberEmail = memberEmail;
-		this.memberId = memberId;
+		this.memberId = idGenerator.generateId();
 	}
 
 	public abstract void notify(String message);

@@ -8,7 +8,7 @@ package com.company.lock;//
 //
 
 
-import com.company.IdGenerator;
+import com.company.utility.IdGenerator;
 
 public class Lock {
 	private static final IdGenerator idGenetator = new IdGenerator("LOCK");
@@ -24,11 +24,11 @@ public class Lock {
 	}
 
 	public void unlock() {
-		System.out.println("LOCK N" + lockId + " UNLOCKED");
+		System.out.println("LOCK " + lockId + " UNLOCKED");
 	}
 	
 	public void lock() {
-		System.out.println("LOCK N" + lockId + " LOCKED");
+		System.out.println("LOCK " + lockId + " LOCKED");
 	}
 	
 	public boolean matches(String lockId, String targetId, String targetType) {

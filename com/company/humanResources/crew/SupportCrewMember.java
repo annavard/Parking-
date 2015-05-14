@@ -11,15 +11,15 @@ package com.company.humanResources.crew;//
 public class SupportCrewMember extends CrewMember {
 	private String parkingId;
 
-	public SupportCrewMember(String memberName, String memberPhone, String memberEmail, String memberId, String parkingId) {
-		super(memberName, memberPhone, memberEmail, memberId);
+	public SupportCrewMember(String memberName, String memberPhone, String memberEmail, String parkingId) {
+		super(memberName, memberPhone, memberEmail);
 
 		this.parkingId = parkingId;
 	}
 
 	@Override
 	public void notify(String message) {
-		System.out.print("SUPPORT NOTIFIED " + message);
+		System.out.println("SUPPORT NOTIFIED " + message);
 	}
 
 

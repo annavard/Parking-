@@ -8,15 +8,17 @@ package com.company.gps;//
 //
 
 
-
+import com.company.utility.IdGenerator;
 
 public class GPSDevice {
+	private static final IdGenerator idGenerator = new IdGenerator("GPS");
+
 	private String gpsDeviceId;
 	private String vehicleId;
 	private Location location;
 
-	public GPSDevice(String gpsDeviceId, String vehicleId, Location location) {
-		this.gpsDeviceId = gpsDeviceId;
+	public GPSDevice(String vehicleId, Location location) {
+		this.gpsDeviceId = idGenerator.generateId();
 		this.vehicleId = vehicleId;
 		this.location = location;
 	}
@@ -25,10 +27,6 @@ public class GPSDevice {
 		return vehicleId;
 	}
 
-	public String getGpsDeviceId() {
-		return gpsDeviceId;
-	}
-	
 	public Location getLocation() {
 		return location;
 	}

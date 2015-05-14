@@ -11,17 +11,12 @@ package com.company.transaction;//
 import java.util.Date;
 
 public class Booking extends Transaction {
-	public static final String STATE_TAKEN = "stateTaken";
-	public static final String STATE_RETURNED = "stateReturned";
-	public static final String STATE_CASE = "stateCase";
-	public static final String STATE_BOOKED = "stateBooked";
-
 	private String state;
 
-	public Booking(String userId, String vehicleId, String parkingId, Date bookStart, Date bookEnd) {
+	public Booking(String userId, String vehicleId, String parkingId, String state, Date bookStart, Date bookEnd) {
 		super(userId, vehicleId, parkingId, bookStart, bookEnd);
 
-		this.state = STATE_BOOKED;
+		this.state = state;
 	}
 
 	public String getState() {

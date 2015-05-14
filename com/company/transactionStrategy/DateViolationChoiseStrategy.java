@@ -8,7 +8,9 @@ package com.company.transactionStrategy;//
 //
 
 
+import com.company.transaction.Booking;
 import com.company.transaction.Transaction;
+import com.company.transaction.TransactionFactory;
 
 import java.util.Date;
 
@@ -21,6 +23,11 @@ public class DateViolationChoiseStrategy implements TransactionChoiseStrategy {
 
 	@Override
 	public boolean matches(Transaction transaction) {
-		return transaction.getBookEnd().before(violationDate);
+		if (transaction instanceof Booking) {
+			Booking booking = (Booking) transaction;
+			return booking.getBookEnd().before(violationDate) && booking.getState().equals(TransactionFactory.STATE_TAKEN);
+		}
+
+		return false;
 	}
 }

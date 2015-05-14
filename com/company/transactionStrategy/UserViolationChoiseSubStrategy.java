@@ -11,6 +11,7 @@ package com.company.transactionStrategy;//
 import com.company.transaction.Booking;
 import com.company.transaction.Processed;
 import com.company.transaction.Transaction;
+import com.company.transaction.TransactionFactory;
 
 public class UserViolationChoiseSubStrategy implements TransactionChoiseSubStrategy {
 	private String userId;
@@ -25,12 +26,12 @@ public class UserViolationChoiseSubStrategy implements TransactionChoiseSubStrat
 		if (transaction instanceof Booking) {
 			Booking booking = (Booking) transaction;
 
-			return (booking.getVehicleId().equals(vehicleId) && booking.getState().equals(Booking.STATE_CASE))
-					|| (booking.getUserId().equals(userId) && !booking.getState().equals(Booking.STATE_RETURNED));
+			return (booking.getVehicleId().equals(vehicleId) && booking.getState().equals(TransactionFactory.STATE_CASE))
+					|| (booking.getUserId().equals(userId) && !booking.getState().equals(TransactionFactory.STATE_RETURNED));
 		} else if (transaction instanceof Processed) {
 			Processed processed = (Processed) transaction;
 
-			return processed.getUserId().equals(userId) && processed.getSystemFeedbackStatus().equals(Processed.STATUS_BAD);
+			return processed.getUserId().equals(userId) && processed.getSystemFeedbackStatus().equals(TransactionFactory.STATUS_BAD);
 		}
 
 		return true;
